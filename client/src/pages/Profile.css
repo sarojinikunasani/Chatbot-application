@@ -1,0 +1,45 @@
+/* client/src/pages/Profile.css */
+.profile-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-container h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    color: #333;
+}
+
+.profile-details {
+    display: grid; /* Keep display: grid if you plan for multi-column later */
+    /* For a two-column layout, you could uncomment the line below: */
+    /* grid-template-columns: 150px auto; */ /* Label and Value columns */
+    /* gap: 15px; */ /* Using margin instead due to build issues */
+}
+
+.detail-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+    margin-bottom: 15px; /* Vertical spacing between items */
+}
+.detail-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0; /* Remove margin from the last item */
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #555;
+    margin-right: 10px;
+    display: inline-block;
+    width: 140px; /* Helps align values if using grid-template-columns */
+}
+
+.detail-value {
+    color: #333;
+    word-break: break-all; /* Wrap long values */
+}

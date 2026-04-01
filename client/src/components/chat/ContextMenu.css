@@ -1,0 +1,35 @@
+/* client/src/components/chat/ContextMenu.css */
+.context-menu {
+    position: absolute;
+    background-color: #2d2f32;
+    border: 1px solid #4d4f58;  /* Corrected: removed extra colon */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Corrected: valid box-shadow value */
+    border-radius: 6px;
+    z-index: 1000;
+    min-width: 160px;
+    padding: 5px 0;
+    color: #d1d5db;
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu ul li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.875em;
+    transition: background-color 0.2s ease;
+}
+
+.context-menu ul li:hover {
+    background-color: #343541;
+    color: #fff;
+}
+
+.context-menu ul li.delete-option:hover {
+    background-color: #5c2b2e;
+    color: #f8d7da;
+}

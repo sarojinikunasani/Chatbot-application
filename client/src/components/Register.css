@@ -1,0 +1,234 @@
+/* client/src/components/Register.css */
+/* (Or Login.css if these styles are shared and Register.js imports Login.css) */
+
+/* Container for both Login and Register */
+.auth-container {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 35px 40px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: inherit; /* Inherit from body/App */
+  color: #555;
+  border: 1px solid #eee;
+}
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  padding-bottom: 15px;
+  /* border-bottom: 1px solid #eee; */
+}
+
+.auth-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.9em;
+  font-weight: 600;
+}
+
+.social-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.social-icons .icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  color: #ababab;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+}
+
+.social-icons .icon:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.75em;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* --- THIS IS THE CORRECTED/EXPANDED SELECTOR --- */
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],  /* ADDED */
+.form-group input[type="tel"]     /* ADDED */ {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 0.95em;
+  color: #333;
+  background-color: #fff;
+}
+/* --- END OF CORRECTED SELECTOR --- */
+
+
+.form-group input[type="text"]::placeholder,
+.form-group input[type="password"]::placeholder,
+.form-group input[type="email"]::placeholder, /* ADDED for consistency */
+.form-group input[type="tel"]::placeholder    /* ADDED for consistency */ {
+    color: #bbb;
+}
+
+/* This :focus rule applies to all input types within .form-group */
+.form-group input:focus {
+  outline: none;
+  border-color: #ae8c43;
+  box-shadow: 0 0 0 3px rgba(213, 170, 79, 0.15);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 13px 15px;
+  background-color: #d5aa4f; /* Gold color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background-color: #c09847;
+}
+
+.btn-submit:disabled {
+    background-color: #e7cfa4;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Styles for Login page specifically (Remember Me, Forgot Password) */
+/* If Register.css is separate, these might not be needed here */
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: #d5aa4f;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.remember-me label {
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 1em;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #666;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+}
+
+.forgot-password-link {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #ae8c43;
+  text-decoration: underline;
+}
+/* End of Login-specific styles */
+
+
+.switch-auth-link {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 4px;
+    color: #d5aa4f;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1em;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+.link-button:hover {
+    text-decoration: underline;
+}
+.link-button:disabled {
+    color: #b3b3b3;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.error-message, .success-message {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 0.9em;
+    border: 1px solid transparent;
+}
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}

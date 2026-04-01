@@ -1,0 +1,41 @@
+.loading-app {
+    text-align: center;
+    margin-top: 100px;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.welcome-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.welcome-container h1 {
+    color: #333;
+    margin-bottom: 15px;
+}
+.welcome-container p {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.btn-logout {
+    padding: 10px 25px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}

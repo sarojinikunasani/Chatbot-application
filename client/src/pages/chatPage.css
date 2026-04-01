@@ -1,0 +1,118 @@
+/* client/src/pages/ChatPage.css /
+.chat-page-container {
+display: flex;
+flex-direction: column;
+height: calc(100vh - 60px); / Adjust if you have a global header outside dashboard layout /
+max-width: 800px; / Max width for chat interface /
+margin: 20px auto; / Center it /
+background-color: #fff;
+border: 1px solid #e0e0e0;
+border-radius: 8px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+overflow: hidden; / Prevent content from spilling */
+}
+.chat-header {
+padding: 15px 20px;
+border-bottom: 1px solid #e0e0e0;
+background-color: #f8f9fa;
+}
+.chat-header h2 {
+margin: 0;
+font-size: 1.2em;
+color: #333;
+}
+.chat-messages-area {
+flex-grow: 1;
+padding: 20px;
+overflow-y: auto; /* Enable scrolling for messages /
+display: flex;
+flex-direction: column; / Stack messages /
+gap: 10px; / Space between messages */
+}
+.chat-message {
+display: flex;
+margin-bottom: 8px;
+}
+.user-message { /* For messages sent by the current user /
+justify-content: flex-end; / Align to the right */
+}
+/* Add .other-user-message for a multi-user chat later if needed /
+/ .other-user-message { justify-content: flex-start; } */
+.message-bubble {
+max-width: 70%; /* Max width of a message bubble /
+padding: 10px 15px;
+border-radius: 18px;
+word-wrap: break-word; / Break long words */
+}
+.user-message .message-bubble {
+background-color: #007bff; /* Example: Bootstrap primary blue /
+color: white;
+border-bottom-right-radius: 5px; / Tail effect /
+}
+.user-message.optimistic .message-bubble {
+background-color: #79bbff; / Lighter blue for optimistic */
+}
+/* .other-user-message .message-bubble { background-color: #e9ecef; color: #333; border-bottom-left-radius: 5px; } */
+.message-text {
+margin: 0 0 5px 0;
+font-size: 0.95em;
+line-height: 1.4;
+}
+.message-timestamp {
+font-size: 0.7em;
+color: rgba(255, 255, 255, 0.7); /* For user messages /
+display: block;
+text-align: right;
+}
+/ .other-user-message .message-timestamp { color: #6c757d; } */
+.chat-input-form {
+display: flex;
+padding: 15px;
+border-top: 1px solid #e0e0e0;
+background-color: #f8f9fa;
+}
+.chat-input-form input[type="text"] {
+flex-grow: 1;
+padding: 10px 12px;
+border: 1px solid #ced4da;
+border-radius: 20px; /* Rounded input */
+margin-right: 10px;
+font-size: 0.95em;
+}
+.chat-input-form input[type="text"]:focus {
+outline: none;
+border-color: #86b7fe;
+box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.chat-input-form button {
+padding: 10px 20px;
+background-color: #007bff;
+color: white;
+border: none;
+border-radius: 20px; /* Rounded button */
+cursor: pointer;
+font-size: 0.95em;
+transition: background-color 0.2s ease;
+}
+.chat-input-form button:hover {
+background-color: #0056b3;
+}
+.chat-input-form button:disabled {
+background-color: #6c757d;
+cursor: not-allowed;
+}
+.loading-history, .no-messages {
+text-align: center;
+color: #6c757d;
+padding: 20px;
+font-style: italic;
+}
+.chat-error-message {
+background-color: #f8d7da;
+color: #721c24;
+padding: 10px;
+border: 1px solid #f5c6cb;
+border-radius: 4px;
+margin: 10px 0;
+text-align: center;
+}

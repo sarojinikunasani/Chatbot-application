@@ -1,0 +1,68 @@
+/* client/src/components/chat/ConfirmationModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75); /* Slightly darker overlay for more focus */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001; /* Ensure it's above other elements like context menu */
+}
+
+.modal-content {
+    background-color: #3a3f4b; /* A distinct dark background for the modal itself */
+                               /* Was #2d2f32, making it slightly lighter can help */
+    color: #e0e0e0;          /* Default light text color for the modal content */
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    min-width: 320px;
+    max-width: 450px;
+}
+
+.modal-content p {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.05em;
+    line-height: 1.5;
+    color: #f0f0f0; /* <<<--- CRITICAL: Ensure this is a very light, readable color */
+                   /* Consider #ffffff (pure white) if #f0f0f0 isn't enough */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-button.confirm-button {
+    background-color: #e53e3e; /* A common red for delete */
+    color: #ffffff; /* <<<--- CRITICAL: Ensure button text is white for contrast */
+}
+
+.modal-button.confirm-button:hover {
+    background-color: #c53030; /* Darker red on hover */
+}
+
+.modal-button.cancel-button {
+    background-color: #555c68; /* Medium grey */
+    color: #f0f0f0; /* <<<--- CRITICAL: Ensure button text is light for contrast */
+}
+
+.modal-button.cancel-button:hover {
+    background-color: #6b7280; /* Lighter grey on hover */
+}

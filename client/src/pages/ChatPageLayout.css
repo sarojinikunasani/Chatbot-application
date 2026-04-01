@@ -1,0 +1,48 @@
+.chat-page-layout {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;   /* Full viewport width */
+  overflow: hidden; /* This container itself should not scroll */
+  background-color: #171717; /* Example dark background for the entire chat area if desired */
+}
+
+.chat-history-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto; 
+}
+
+.chat-interface-wrapper {
+  flex-grow: 1; /* Takes all remaining horizontal space */
+  height: 100%;   /* Takes full vertical space of its parent */
+  display: flex;  /* To allow ChatInterface component to also use flex/height:100% */
+  flex-direction: column;
+  overflow: hidden; /* VERY IMPORTANT: This wrapper should not expand due to its content */
+  min-width: 0;     /* CRUCIAL: Allows this flex item to shrink and forces content within to wrap or scroll */
+  background-color: #ffffff; /* Or your desired background for the chat message area */
+}
+
+.loading-chat-layout,
+.no-conversation-selected {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  background-color: #ffffff; 
+  color: #6c757d;
+}
+
+.no-conversation-selected .chat-error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  max-width: 80%;
+}

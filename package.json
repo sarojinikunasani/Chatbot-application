@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "fast-equals": "^5.2.2",
+    "react-beautiful-dnd": "^13.1.1"
+  }
+}

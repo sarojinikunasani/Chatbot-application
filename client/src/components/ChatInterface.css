@@ -1,0 +1,185 @@
+/* ChatGPT Dark Theme */
+
+.chat-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #0d0d0d;
+    overflow: hidden;
+}
+
+/* CHAT AREA */
+
+.chat-messages-display-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #0d0d0d;
+}
+
+/* WELCOME TEXT */
+
+.chat-loading-messages,
+.chat-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8e8ea0;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.chat-welcome h2 {
+    font-size: 1.6em;
+    font-weight: 500;
+}
+
+/* MESSAGE WRAPPER */
+
+.message-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.message-wrapper.user-message {
+    justify-content: flex-end;
+}
+
+.message-wrapper.bot-message {
+    justify-content: flex-start;
+}
+
+/* MESSAGE BUBBLE */
+
+.message-bubble {
+    padding: 12px 16px;
+    border-radius: 16px;
+    max-width: 70%;
+    word-wrap: break-word;
+    line-height: 1.5;
+    font-size: 0.95em;
+}
+
+/* USER MESSAGE */
+
+.message-wrapper.user-message .message-bubble {
+    background-color: #2563eb;
+    color: #ffffff;
+    border-bottom-right-radius: 6px;
+}
+
+/* BOT MESSAGE */
+
+.message-wrapper.bot-message .message-bubble {
+    background-color: #202123;
+    color: #e5e5e5;
+    border-bottom-left-radius: 6px;
+}
+
+/* TYPING INDICATOR */
+
+.message-bubble.typing-indicator {
+    font-style: italic;
+    color: #9ca3af;
+}
+
+/* INPUT AREA */
+
+.chat-input-area {
+    padding: 12px 16px;
+    border-top: 1px solid #2f2f2f;
+    background-color: #0d0d0d;
+}
+
+/* INPUT FORM */
+
+.chat-input-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* TEXT INPUT */
+
+.chat-input-form input[type="text"] {
+    flex-grow: 1;
+    background-color: #202123;
+    border: 1px solid #3f3f46;
+    color: #ffffff;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    outline: none;
+}
+
+.chat-input-form input::placeholder {
+    color: #8e8ea0;
+}
+
+/* INPUT FOCUS */
+
+.chat-input-form input:focus {
+    border-color: #2563eb;
+}
+
+/* ACTION BUTTONS */
+
+.input-action-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #a1a1aa;
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-action-button:hover {
+    color: #ffffff;
+}
+
+/* MIC ACTIVE */
+
+.input-action-button.mic-button.active {
+    color: #2563eb;
+}
+
+/* SEND BUTTON */
+
+.send-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.send-button:hover {
+    background-color: #1d4ed8;
+}
+
+.send-button:disabled {
+    background-color: #3f3f46;
+    cursor: not-allowed;
+}
+
+/* ERROR */
+
+.chat-send-error {
+    color: #ef4444;
+    font-size: 0.85em;
+    margin-bottom: 6px;
+    text-align: center;
+}

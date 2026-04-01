@@ -1,0 +1,279 @@
+// client/src/components/ChatInterface.js
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import axios from 'axios';
+import { FiPlus } from 'react-icons/fi';
+import { BsMicFill, BsArrowUpShort } from 'react-icons/bs';
+import './ChatInterface.css';
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function ChatInterface({
+    messages = [],
+    isLoadingMessages,
+    addMessageToList,
+    updateMessage,
+    removeMessageOnError,
+    activeConversationId,
+    apiChatUrl
+}) {
+    const [newMessage, setNewMessage] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const [error, setError] = useState('');
+    const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
+
+    const [isListening, setIsListening] = useState(false);
+    const recognitionRef = useRef(null);
+    const currentTranscriptRef = useRef("");
+    const isHoldActiveRef = useRef(false);
+    const shortClickTimeoutIdRef = useRef(null);
+
+    useEffect(() => {
+        if (!SpeechRecognition) {
+            setError("Voice input not supported by your browser.");
+            return;
+        }
+        if (!recognitionRef.current) {
+            const instance = new SpeechRecognition();
+            instance.continuous = true;
+            instance.interimResults = true;
+            instance.lang = 'en-US';
+            recognitionRef.current = instance;
+        }
+    }, []);
+
+    const scrollToBottom = () => {
+        setTimeout(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, 50);
+    };
+    useEffect(() => { scrollToBottom(); }, [messages]);
+
+    useEffect(() => {
+        if (messages.length === 0 && !isLoadingMessages && !isListening) {
+            inputRef.current?.focus();
+        }
+    }, [messages.length, isLoadingMessages, isListening]);
+
+    const handleRecognitionResult = useCallback((event) => {
+        let transcriptSegment = '';
+        let currentEventIsFinal = false;
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            transcriptSegment += event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                   currentEventIsFinal = true;
+            }
+        }
+        if (currentEventIsFinal) {
+            currentTranscriptRef.current = (currentTranscriptRef.current + " " + transcriptSegment).trim();
+            setNewMessage(currentTranscriptRef.current);
+        } else if (transcriptSegment) {
+            setNewMessage((currentTranscriptRef.current + " " + transcriptSegment).trim());
+        }
+    }, []);
+
+    const actualOnEndHandler = useCallback(() => {
+        setIsListening(false);
+        if (isListening && !isHoldActiveRef.current && shortClickTargetEndTimeRef.current && Date.now() < shortClickTargetEndTimeRef.current) {
+            const remainingTime = shortClickTargetEndTimeRef.current - Date.now();
+            if (remainingTime > 100) {
+                const rec = recognitionRef.current;
+                if (rec) {
+                    try { rec.start(); setIsListening(true); /* For restart within timeout */ }
+                    catch (e) { setIsListening(false); shortClickTargetEndTimeRef.current = null; clearTimeout(shortClickTimeoutIdRef.current); voiceTimeoutRef.current = null;}
+                }
+                return; 
+            }
+        }
+        clearTimeout(shortClickTimeoutIdRef.current);
+        shortClickTimeoutIdRef.current = null;
+        shortClickTargetEndTimeRef.current = null; // Clear target explicitly
+        if (inputRef.current && currentTranscriptRef.current.trim() && !isHoldActiveRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isListening]); // isListening is needed here
+    const shortClickTargetEndTimeRef = useRef(null); // Moved for clarity with actualOnEndHandler
+    const voiceTimeoutRef = useRef(null); // Alias for shortClickTimeoutIdRef for clarity in original logic
+
+
+    const memoizedHandleRecognitionError = useCallback((event) => {
+        let errText = `Voice error: ${event.error}`;
+        if (event.error === 'no-speech') errText = "No speech detected.";
+        else if (event.error === 'audio-capture') errText = "Microphone error.";
+        else if (event.error === 'not-allowed') errText = "Microphone access denied.";
+        setError(errText);
+        setIsListening(false);
+        clearTimeout(shortClickTimeoutIdRef.current);
+        shortClickTimeoutIdRef.current = null;
+        shortClickTargetEndTimeRef.current = null;
+    }, []);
+
+    useEffect(() => {
+        const rec = recognitionRef.current;
+        if (!rec) return;
+        const onResult = handleRecognitionResult;
+        const onEnd = actualOnEndHandler;
+        const onError = memoizedHandleRecognitionError;
+        rec.addEventListener('result', onResult);
+        rec.addEventListener('end', onEnd);
+        rec.addEventListener('error', onError);
+        return () => {
+            rec.removeEventListener('result', onResult);
+            rec.removeEventListener('end', onEnd);
+            rec.removeEventListener('error', onError);
+            if (rec && typeof rec.stop === 'function' && isListening) {
+                try { rec.abort(); } catch (e) {}
+            }
+        };
+    }, [handleRecognitionResult, actualOnEndHandler, memoizedHandleRecognitionError, isListening]);
+
+    const startVoice = (forHold = false) => {
+        const rec = recognitionRef.current;
+        if (!rec || isListening) return;
+        setError('');
+        currentTranscriptRef.current = ""; setNewMessage("");
+        rec.continuous = true; // Should always be continuous for our logic
+
+        try {
+            rec.start();
+            setIsListening(true);
+            if (!forHold) {
+                shortClickTargetEndTimeRef.current = Date.now() + 10000;
+                clearTimeout(shortClickTimeoutIdRef.current);
+                shortClickTimeoutIdRef.current = setTimeout(() => {
+                    if (isListening && shortClickTargetEndTimeRef.current) { // Check if it's still this timed session
+                        shortClickTargetEndTimeRef.current = null; // Mark timeout has fired
+                        stopVoice();
+                    }
+                }, 10000);
+            } else {
+                shortClickTargetEndTimeRef.current = null;
+                clearTimeout(shortClickTimeoutIdRef.current);
+            }
+        } catch (e) {
+            setError(`Could not start: ${e.message}`);
+            setIsListening(false);
+            shortClickTargetEndTimeRef.current = null;
+            clearTimeout(shortClickTimeoutIdRef.current);
+        }
+    };
+
+    const stopVoice = () => {
+        const rec = recognitionRef.current;
+        shortClickTargetEndTimeRef.current = null; // Explicit stop overrides short click timing
+        clearTimeout(shortClickTimeoutIdRef.current);
+        if (rec && isListening) {
+            rec.stop();
+        } else {
+            setIsListening(false);
+        }
+    };
+
+    const handleMicButtonClick = () => {
+        if (isHoldActiveRef.current) return; // Let hold logic handle it
+        if (isListening) {
+            stopVoice();
+        } else {
+            startVoice(false); // isForHold = false
+        }
+    };
+
+    const handleMicPress = (e) => {
+        e.preventDefault();
+        if (!recognitionRef.current) { setError("Voice not supported."); return; }
+        isHoldActiveRef.current = true;
+        clearTimeout(shortClickTimeoutIdRef.current); // Cancel any short click timeout
+        shortClickTargetEndTimeRef.current = null;
+
+        if (isListening) {
+            const rec = recognitionRef.current;
+            const tempOnEnd = () => {
+                rec.removeEventListener('end', tempOnEnd);
+                rec.addEventListener('end', actualOnEndHandler);
+                setIsListening(false);
+                if (isHoldActiveRef.current) startVoice(true); // isForHold = true
+            };
+            rec.removeEventListener('end', actualOnEndHandler);
+            rec.addEventListener('end', tempOnEnd, { once: true });
+            rec.stop();
+        } else {
+            startVoice(true); // isForHold = true
+        }
+    };
+
+    const handleMicRelease = (e) => {
+        e.preventDefault();
+        if (isHoldActiveRef.current) {
+            stopVoice();
+            isHoldActiveRef.current = false;
+        }
+    };
+
+    const handleInputChange = (e) => { setNewMessage(e.target.value); };
+    const handleSendMessage = async (e) => {
+        e.preventDefault();
+        if (isListening) stopVoice();
+        const messageToSend = newMessage.trim();
+        if (!messageToSend || isSending) return;
+        setIsSending(true); setError(''); currentTranscriptRef.current = "";
+        const tempId = `optimistic-${Date.now()}`;
+        const optimisticMessage = { id: tempId, user_id: 'currentUser', message_text: messageToSend, sent_at: new Date().toISOString(), conversation_id: activeConversationId, isOptimistic: true };
+        addMessageToList(optimisticMessage); setNewMessage('');
+        try {
+            const token = localStorage.getItem('authToken'); if (!token) throw new Error('No auth token');
+            const config = { headers: { 'Authorization': `Bearer ${token}` } };
+            const payload = { messageText: messageToSend, conversationId: activeConversationId };
+            const response = await axios.post(`${apiChatUrl}/messages`, payload, config);
+            updateMessage(tempId, response.data);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to send message.');
+            removeMessageOnError(tempId);
+        } finally {
+            setIsSending(false); inputRef.current?.focus();
+        }
+    };
+
+    const voiceButtonActive = isListening;
+
+    return (
+        <div className="chat-interface">
+            <div className="chat-messages-display-area">
+                {isLoadingMessages && messages.length === 0 && ( <div className="chat-loading-messages">Loading messages...</div> )}
+                {!isLoadingMessages && messages.length === 0 && !error && ( <div className="chat-welcome"><h2>What can I help with?</h2></div> )}
+                {messages.map((msg) => (
+                     <div key={msg.id} className={`message-wrapper ${msg.isOptimistic ? 'optimistic' : ''} user-message`}>
+                        <div className="message-bubble"><p className="message-text">{msg.message_text}</p></div>
+                    </div>
+                ))}
+                <div style={{ float:"left", clear: "both" }} ref={messagesEndRef}></div>
+            </div>
+            <div className="chat-input-area">
+                {(error && !isSending && !isListening) && <p className="chat-send-error">{error}</p>}
+                <form className="chat-input-form" onSubmit={handleSendMessage}>
+                    <button type="button" className="input-action-button attach-button" title="Attach file (placeholder)"> <FiPlus /> </button>
+                    <input
+                        ref={inputRef} type="text" value={newMessage}
+                        onChange={handleInputChange} placeholder={voiceButtonActive ? "Listening..." : "Ask anything..."}
+                        disabled={isSending || isLoadingMessages} aria-label="Chat message input"
+                    />
+                    <button
+                        type="button"
+                        className={`input-action-button mic-button ${voiceButtonActive ? 'active' : ''}`}
+                        title="Use microphone"
+                        onClick={handleMicButtonClick}
+                        onMouseDown={handleMicPress}
+                        onMouseUp={handleMicRelease}
+                        onTouchStart={handleMicPress}
+                        onTouchEnd={handleMicRelease}
+                    >
+                        <BsMicFill />
+                    </button>
+                    <button type="submit" disabled={isSending || isLoadingMessages || !newMessage.trim() || isListening } aria-label="Send message" className="send-button" >
+                        {isSending ? '...' : <BsArrowUpShort />}
+                    </button>
+                </form>
+                <p className="chat-footer-text">Chat history is saved. No AI replies are generated in this demo.</p>
+            </div>
+        </div>
+    );
+}
+
+export default ChatInterface;
